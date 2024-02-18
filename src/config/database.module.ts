@@ -9,11 +9,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
             inject : [ConfigService] ,
             useFactory : (configService:ConfigService)=>({
                 type : "postgres" ,
-                database : configService.get<string>("POSTGRES_DATABASE") , 
-                host : configService.get<string>("POSTGRES_HOST") ,
-                port : configService.get<number>("POSTGRES_PORT") ,
-                username : configService.get<string>("POSTGRES_USERNAME") , 
-                password : configService.get<string>("POSTGRES_PASSWORD") , 
+                url : configService.get('POSTGRES_URL') , 
                 entities : [ 
                     "dist/**/*.entity{.ts,.js}",
                     "src/**/*.entity{.ts,.js}"
