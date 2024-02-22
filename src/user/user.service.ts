@@ -36,10 +36,10 @@ export class UserService {
     } = updateUserDto ; 
 
     try {
-      
+      await 
     } catch (error) {
       return {
-        
+
       }
     }
   }
