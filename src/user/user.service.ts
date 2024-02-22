@@ -26,7 +26,22 @@ export class UserService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+    const {
+      username , 
+      email , 
+      first_name , 
+      last_name , 
+      password , 
+      role , 
+    } = updateUserDto ; 
+
+    try {
+      
+    } catch (error) {
+      return {
+        
+      }
+    }
   }
 
   remove(id: number) {
