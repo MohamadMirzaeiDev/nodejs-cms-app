@@ -4,9 +4,14 @@ import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { ValidationPipe } from "@nestjs/common";
 
 
-async function run(port:number){
+async function run(port:number , host:string){
     const app = await NestFactory.create(AppModule);
     app.useGlobalPipes(new ValidationPipe())
+    app.enableCors({
+        origin: "*",
+        methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    });
+    
     const config = new DocumentBuilder()
         .setTitle('Node CMS App')
         .setDescription('Powerful content managment system')
@@ -18,8 +23,8 @@ async function run(port:number){
 
     SwaggerModule.setup('api' , app , document);
 
-    await app.listen(port)
+    await app.listen(port , host)
 }
 
 
-run(3001);  
+run(3000 , '0.0.0.0');  
