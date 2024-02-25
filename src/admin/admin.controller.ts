@@ -1,6 +1,6 @@
 import { Controller, Get, Req, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { Request } from 'express';
 import { HasRoles } from "src/auth/decorator/role.decorator";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
@@ -11,6 +11,7 @@ import { Role } from "src/user/enum/role.enum";
 export class AdminController {
 
     @Get('')
+    @ApiBearerAuth()
     @UseGuards(JwtAuthGuard)
     @UseGuards()
     async me(@Req() req:Request){
