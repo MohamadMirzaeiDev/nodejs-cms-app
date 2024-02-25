@@ -16,7 +16,7 @@ export class AuthService {
     ){}
 
     private async _signToken(payload:JwtPayload){
-        return await this.jwtService.signAsync(payload);
+        return await this.jwtService.signAsync(payload , );
     }
 
 

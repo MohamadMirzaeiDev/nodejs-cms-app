@@ -6,16 +6,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt/jwt.startegy';
 import { UserModule } from 'src/user/user.module';
+import { passportConfig } from 'src/config/passport.config';
 
 @Module({
     imports : [
         ConfigModule ,
         UserModule ,
-        PassportModule.register({
-            defaultStrategy : 'jwt' , 
-            property : 'user' , 
-            session : false , 
-        }) ,
+        PassportModule.register(passportConfig) ,
         JwtModule.registerAsync({
             imports : [ConfigModule],
             inject : [ConfigService],
