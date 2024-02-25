@@ -1,7 +1,7 @@
 import { BadRequestException, HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { FindOptionsWhere, FindOptionsWhereProperty, Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { StatusResult } from 'src/shared/status-result/status-result';
@@ -76,6 +76,7 @@ export class UserService {
       username , 
       first_name , 
       last_name , 
+      roles , 
     } = updateUserDto ; 
 
     const result:StatusResult = {
@@ -89,7 +90,7 @@ export class UserService {
       await this.userRepo
                 .createQueryBuilder()
                 .update(User)
-                .set({first_name , last_name, email , username})
+                .set({first_name , last_name, email , username  , roles ,})
                 .where("id = :id",{id})
                 .execute()
                 
