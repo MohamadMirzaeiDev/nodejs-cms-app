@@ -14,9 +14,6 @@ export class UserService {
     @InjectRepository(User)
     private readonly userRepo:Repository<User> , 
   ){}
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
-  }
 
   async findAll() :Promise<User[]>{
     return this.userRepo.find({})
@@ -33,7 +30,44 @@ export class UserService {
       throw new NotFoundException("user is not found")
     }
 
-    return user 
+    return user ; 
+  }
+
+
+  async userCounter():Promise<number>{
+    return await this.userRepo.count();
+  }
+
+  async create(createUserDto:CreateUserDto):Promise<User>{
+    const {
+      email , 
+      first_name ,
+      last_name , 
+      password , 
+      roles , 
+      username ,
+    } = createUserDto ;
+
+    if(await this.findOne({email})){
+      throw new BadRequestException('this email alredy exist')
+    }
+
+    if(await this.findOne({username})){
+      throw new BadRequestException('this username alredy exist')
+    }
+
+    const user = new User()
+   
+    user.email = email ;
+    user.first_name = first_name ;
+    user.last_name = last_name; 
+    user.username =  username ; 
+    user.password = password ;
+    user.roles = roles;
+
+    const result = await this.userRepo.save(user);
+
+    return result ; 
   }
 
   async update(id: string, updateUserDto: UpdateUserDto):Promise<StatusResult>{
@@ -42,7 +76,6 @@ export class UserService {
       username , 
       first_name , 
       last_name , 
-      role , 
     } = updateUserDto ; 
 
     const result:StatusResult = {
@@ -56,7 +89,7 @@ export class UserService {
       await this.userRepo
                 .createQueryBuilder()
                 .update(User)
-                .set({first_name , last_name ,role , email , username})
+                .set({first_name , last_name, email , username})
                 .where("id = :id",{id})
                 .execute()
                 

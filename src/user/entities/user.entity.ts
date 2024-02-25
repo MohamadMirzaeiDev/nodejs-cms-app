@@ -1,6 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import { Role } from "../enum/role.enum";
-
+import * as bcrypt from 'bcrypt';
 @Entity({name : "User"})
 export class User {
     @PrimaryGeneratedColumn('uuid')
@@ -18,9 +18,14 @@ export class User {
     @Column({type : 'varchar' , nullable : false , unique : true})
     username : string ; 
 
+    @BeforeInsert()
+    hashPassword(){
+        this.password = bcrypt.hashSync(this.password , 12);
+    }
+
     @Column({type : 'varchar' , nullable : false})
     password : string ; 
 
-    @Column({type : 'enum' , enum : Role , default : Role.DEFAULT})
-    role : Role ; 
+    @Column({type : 'enum' , enum : Role , array : true , default : [Role.DEFAULT]})
+    roles : Role[] ; 
 }
