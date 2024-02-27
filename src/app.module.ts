@@ -9,6 +9,9 @@ import { EmailService } from './email/email.service';
 import { EmailModule } from './email/email.module';
 import { AdminService } from './admin/admin.service';
 import { AdminModule } from './admin/admin.module';
+import { ProductModule } from './product/product.module';
+import { CategoryModule } from './category/category.module';
+
 
 @Module({
     imports : [
@@ -17,7 +20,9 @@ import { AdminModule } from './admin/admin.module';
         UserModule,
         AuthModule,
         EmailModule,
-        AdminModule ,
+        AdminModule,
+        ProductModule,
+        CategoryModule , 
     ],
     controllers : [AuthController],
     providers: [AuthService, EmailService, AdminService]

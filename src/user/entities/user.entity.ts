@@ -28,4 +28,26 @@ export class User {
 
     @Column({type : 'enum' , enum : Role , array : true , default : [Role.DEFAULT]})
     roles : Role[] ; 
+
+    @Column({type : 'varchar' , nullable : true})
+    home_phone_number : string;
+    
+    @Column({type : 'varchar' , nullable : true})
+    phone_number : string ; 
+
+    @Column({type : 'varchar', nullable : true})
+    address : string ;
+
+    @Column({type : 'varchar' , nullable : true})
+    country : string ;
+    
+    @Column({type : 'varchar' , nullable : true})
+    city : string ; 
+
+    @Column({type : 'varchar' , nullable : true})
+    postal_code: string ;
+
+    @Column({type : 'varchar' , nullable : true})
+    note : string ; 
+
 }
