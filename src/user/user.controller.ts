@@ -71,7 +71,7 @@ export class UserController {
     }
 
 
-    @Delete(':id')
+    @Put('changePassword/:id')
     @HasRole(Role.ADMIN)   
     @UseGuards(JwtAuthGuard , RolesGuard)
     async changePassword(@Body() changePasswordDto:ChangePasswordDto ,@Param('id') id:string){
