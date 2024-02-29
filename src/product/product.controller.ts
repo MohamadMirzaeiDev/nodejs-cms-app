@@ -2,13 +2,14 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Put, BadR
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { RolesGuard } from 'src/auth/guards/role.guard';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Role } from 'src/user/enum/role.enum';
 import { HasRole } from 'src/auth/decorator/role.decorator';
 
 @ApiTags('Product')
+@ApiBearerAuth('access-token')
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
