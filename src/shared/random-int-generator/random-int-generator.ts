@@ -1,4 +1,4 @@
-const randomIntGenerator = (length:number)=>{
+export const randomIntGenerator = (length:number)=>{
     const digis = '0123456789';
     let otp = '';
 
@@ -8,6 +8,3 @@ const randomIntGenerator = (length:number)=>{
 
     return otp ; 
 }
-
-
-console.log(randomIntGenerator(4))
