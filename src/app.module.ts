@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { Module, forwardRef } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { DatabaseModule } from "./config/database.module";
 import { UserModule } from './user/user.module';
@@ -11,6 +11,7 @@ import { AdminService } from './admin/admin.service';
 import { AdminModule } from './admin/admin.module';
 import { ProductModule } from './product/product.module';
 import { CategoryModule } from './category/category.module';
+import { OrderModule } from './order/order.module';
 
 
 @Module({
@@ -21,10 +22,11 @@ import { CategoryModule } from './category/category.module';
         AuthModule,
         EmailModule,
         AdminModule,
+        CategoryModule ,
         ProductModule,
-        CategoryModule , 
+        OrderModule , 
     ],
-    controllers : [AuthController],
-    providers: [AuthService, EmailService, AdminService]
+    controllers : [],
+    exports : []
 })
 export class AppModule {}
