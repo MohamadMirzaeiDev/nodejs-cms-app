@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, UseGuards } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, UseGuards } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
 import { HasRole } from "src/auth/decorator/role.decorator";
@@ -58,7 +58,13 @@ export class UserController {
     @HasRole(Role.ADMIN)   
     @UseGuards(JwtAuthGuard , RolesGuard)
     async update(@Param('id') id:string , @Body() updateUserDto:UpdateUserDto){
-        return this.userService.update(id , updateUserDto);
+        const result = await this.userService.update(id , updateUserDto);
+
+        if(!result.success){
+            throw new BadRequestException(result.message);
+        }
+
+        return result
     }
 
 
@@ -67,7 +73,14 @@ export class UserController {
     @HasRole(Role.ADMIN)   
     @UseGuards(JwtAuthGuard , RolesGuard)
     async remove(@Param('id') id:string){
-        return this.userService.remove(id);
+        const result = await this.userService.remove(id);
+
+        if(!result.success){
+            throw new BadRequestException(result.message);
+        }
+
+        return result
+        
     }
 
 
@@ -75,7 +88,13 @@ export class UserController {
     @HasRole(Role.ADMIN)   
     @UseGuards(JwtAuthGuard , RolesGuard)
     async changePassword(@Body() changePasswordDto:ChangePasswordDto ,@Param('id') id:string){
-        return this.userService.changePassword(changePasswordDto , id);
+        const result = await this.userService.changePassword(changePasswordDto , id);
+
+        if(!result.success){
+            throw new BadRequestException(result.message);
+        }
+
+        return result
     }
 
 }
