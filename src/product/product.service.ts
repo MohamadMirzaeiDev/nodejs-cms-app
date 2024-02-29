@@ -1,26 +1,142 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, NotFoundException, forwardRef } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { CategoryService } from 'src/category/category.service';
+import { StatusResult } from 'src/shared/status-result/status-result';
+import { Product } from './entities/product.entity';
+import { In, Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Category } from 'src/category/entities/category.entity';
 
 @Injectable()
 export class ProductService {
-  create(createProductDto: CreateProductDto) {
-    return 'This action adds a new product';
+  constructor(
+    @InjectRepository(Product)
+    private readonly productRepo:Repository<Product> ,
+    private readonly categoryService:CategoryService , 
+  ){}
+
+  async create(createProductDto: CreateProductDto):Promise<StatusResult>{
+    const {
+      categoryId , 
+      color , 
+      count , 
+      description ,
+      // images ,
+      name , 
+      size , 
+      inـstock 
+    } = createProductDto ;
+
+    const statusResult:StatusResult = {
+      message : 'item created successfully',
+      success : true , 
+    }
+
+    try {
+      const newProduct = new Product();
+      newProduct.name = name ;
+      newProduct.description = description ;
+      newProduct.color = color ; 
+      newProduct.count = count ;
+      newProduct.inـstock = inـstock ;
+      newProduct.size = size ; 
+
+      console.log(categoryId)
+
+      if(categoryId){
+        const category = await this.categoryService.findOne({id:categoryId});
+        console.log(category)
+        newProduct.category = category ;
+      }
+
+
+      const savedProduct = await this.productRepo.save(newProduct);
+      statusResult.Id = savedProduct.id ;
+    } catch (error) {
+      return {
+        message : error.message , 
+        success : false , 
+      }
+    }
+
+    return statusResult ; 
   }
 
-  findAll() {
-    return `This action returns all product`;
+  async findAll():Promise<Product[]>{
+    return await this.productRepo.find({relations : {category : true}})
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async findOne(id : string){
+    const product = await this.productRepo.findOne({where : {id} , relations : {category : true}})
+
+    if(!product){
+      throw new NotFoundException('product is not found')
+    }
+
+    return product ; 
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  async update(id: string, updateProductDto: UpdateProductDto):Promise<StatusResult>{
+    const {
+      categoryId , 
+      color , 
+      count , 
+      description ,
+      // images ,
+      name , 
+      size , 
+      inـstock 
+    } = updateProductDto ;
+
+
+    const statusResult:StatusResult = {
+      message : 'item edited successfully',
+      success : true 
+    }
+
+    try {
+      await this.findOne(id)
+      let category:Category | null; 
+
+      if(categoryId){
+        const res  = await this.categoryService.findOne({id:categoryId});
+
+        category = res ;
+      }else {
+        category = null
+      }
+      await this.productRepo
+                .createQueryBuilder()
+                .update(Product)
+                .set({
+                  category , 
+                  color , 
+                  count , 
+                  description , 
+                  name , 
+                  size , 
+                  inـstock ,
+                })
+                .where('id = :id' , {id})
+                .execute()
+                
+    } catch (error) {
+     return {
+      message : error.message ,
+      success : false
+     } 
+    }
+
+    return statusResult
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async remove(id: string):Promise<StatusResult>{
+    await this.productRepo.delete({id})
+
+    return {
+      message : 'item removed successfully',
+      success : true 
+    }
   }
 }

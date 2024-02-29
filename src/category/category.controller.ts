@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, UseGuards, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, UseGuards, NotFoundException, BadRequestException } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
@@ -17,39 +17,51 @@ export class CategoryController {
   @Post()
   @HasRole(Role.ADMIN)   
   @UseGuards(JwtAuthGuard , RolesGuard)
-  create(@Body() createCategoryDto: CreateCategoryDto) {
-    return this.categoryService.create(createCategoryDto);
+  async create(@Body() createCategoryDto: CreateCategoryDto) {
+    const result = await this.categoryService.create(createCategoryDto);
+
+    if(!result.success){
+      throw new BadRequestException(result.message);
+    }
+
+    return result
   }
 
   @Get() 
   @UseGuards(JwtAuthGuard)
-  findAll() {
-    return this.categoryService.findAll();
+  async findAll() {
+    return await this.categoryService.findAll();
   }
 
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   async findOne(@Param('id') id: string) {
-    const category = await this.categoryService.findOne({id});
-
-    if(!category){
-      throw new NotFoundException('invalid category')
-    }
-
-    return category ; 
+    return await this.categoryService.findOne({id});
   }
 
   @Put(':id')
   @HasRole(Role.ADMIN)   
   @UseGuards(JwtAuthGuard , RolesGuard)
-  update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
-    return this.categoryService.update(id, updateCategoryDto);
+  async update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
+    const result = await this.categoryService.update(id, updateCategoryDto);
+
+    if(!result.success){
+        throw new BadRequestException(result.message);
+    }
+
+    return result
   }
 
   @Delete(':id')
   @HasRole(Role.ADMIN)   
   @UseGuards(JwtAuthGuard , RolesGuard)
-  remove(@Param('id') id: string) {
-    return this.categoryService.remove(id);
+  async remove(@Param('id') id: string) {
+    const result = await this.categoryService.remove(id);
+
+      if(!result.success){
+        throw new BadRequestException(result.message);
+    }
+
+    return result
   }
 }

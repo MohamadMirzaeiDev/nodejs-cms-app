@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty } from "class-validator";
+import { IsArray, IsNotEmpty } from "class-validator";
 
 export class CreateCategoryDto {
     @IsNotEmpty()

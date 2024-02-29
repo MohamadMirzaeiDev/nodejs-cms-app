@@ -1,9 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, NotFoundException, forwardRef } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from './entities/category.entity';
-import { FindOptionsWhere, Repository } from 'typeorm';
+import { FindOptionsWhere, In, Repository } from 'typeorm';
 import { StatusResult } from 'src/shared/status-result/status-result';
 
 type Where = FindOptionsWhere<Category>
@@ -16,24 +16,25 @@ export class CategoryService {
   ){}
 
   async create(createCategoryDto: CreateCategoryDto):Promise<StatusResult>{
-    const {name} = createCategoryDto ;
+    const {name } = createCategoryDto ;
     const statusResult:StatusResult = {
       message : "Itam created successfully",
       success : true , 
     }
 
     try {
-      const category = await this.findOne({name});
+      const category = await this.categoryRepo.findOne({where : {name}});
       if(category) throw new BadRequestException('category alredy exist');
 
       const newCategory = new Category()
       newCategory.name = name ; 
+  
       const savedCategory = await this.categoryRepo.save(newCategory);
 
       statusResult.Id = savedCategory.id 
     } catch (error) {
       return {
-        message : error.messag , 
+        message : error.message , 
         success : false
       }
     }
@@ -41,32 +42,33 @@ export class CategoryService {
     return statusResult ;
   }
 
-  async findAll() {
-    return await this.categoryRepo.find({})
+  async findAll():Promise<Category[]>{
+    return await this.categoryRepo.find({relations : {products : true}})
   }
 
-  async findOne(where:Where) {
-    return this.categoryRepo.findOne({where})
+  async findOne(where:Where):Promise<Category>{
+    const category = await this.categoryRepo.findOne({ where , relations : { products : true}})
+
+    if(!category){
+      throw new NotFoundException('category is not found');
+    }
+
+    return category ; 
   }
 
   async update(id:string , updateCategoryDto:UpdateCategoryDto):Promise<StatusResult>{
-    const {name} = updateCategoryDto ;
+    const {name } = updateCategoryDto ;
     const statusResult:StatusResult = {
       message : 'Category edited successfully' , 
       success :  true , 
     }
 
     try {
-      const category = await this.findOne({id})
-
-      if(!category){
-        throw new BadRequestException('invalid category')
-      }
-
+      await this.findOne({id})
       await this.categoryRepo
                 .createQueryBuilder()
                 .update(Category)
-                .set({name})
+                .set({name })
                 .where("id = :id",{id})
                 .execute()
 
