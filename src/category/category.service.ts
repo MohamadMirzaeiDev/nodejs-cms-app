@@ -84,6 +84,25 @@ export class CategoryService {
     return statusResult ; 
   }
 
+  async removeProduct(productId:string , categoryId:string):Promise<StatusResult>{
+    const statusResult:StatusResult = {
+      message : 'product removed successfully' , 
+      success : true , 
+    }
+    try {
+      const category = await this.findOne({id:categoryId})
+      category.products = category.products.filter(product => product.id !== productId);
+      await this.categoryRepo.save(category);
+    } catch (error) {
+      return {
+        message : error.message , 
+        success : false 
+      }
+    }
+
+    return statusResult ;
+  }
+
   async remove(id: string):Promise<StatusResult>{
     try {
       await this.categoryRepo.delete({id})

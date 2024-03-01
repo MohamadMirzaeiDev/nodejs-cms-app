@@ -19,11 +19,20 @@ export class Product {
     @Column({type : 'varchar' , nullable : false})
     description : string ; 
 
-    @Column({type : 'varchar' , nullable : false})
-    color : string ; 
-        
-    @Column({type : 'varchar' , nullable : false})
-    size : string ; 
+    @Column({type : 'varchar' , array : true , nullable :false})
+    comments : string[] ;
+
+    @Column({type : 'varchar' , array : true , nullable :false})
+    tags: string[] ;
+
+    @Column({type : 'varchar' , nullable : false })
+    weight: string ; 
+
+    @Column({type : 'boolean' , nullable : false })
+    isDigital :boolean ; 
+
+    @Column({type : 'int'})
+    score : number; 
 
     @Column({type : 'int' , nullable : false})
     count : number ;

@@ -19,12 +19,14 @@ export class ProductService {
   async create(createProductDto: CreateProductDto):Promise<StatusResult>{
     const {
       categoryId , 
-      color , 
+      score ,
       count , 
       description ,
-      // images ,
-      name , 
-      size , 
+      name ,  
+      isDigital , 
+      comments , 
+      tags , 
+      weight , 
       inـstock 
     } = createProductDto ;
 
@@ -37,16 +39,17 @@ export class ProductService {
       const newProduct = new Product();
       newProduct.name = name ;
       newProduct.description = description ;
-      newProduct.color = color ; 
+      newProduct.score =  score; 
       newProduct.count = count ;
       newProduct.inـstock = inـstock ;
-      newProduct.size = size ; 
+      newProduct.weight = weight; 
+      newProduct.tags = tags ;
+      newProduct.comments = comments ; 
+      newProduct.isDigital = isDigital ;
 
-      console.log(categoryId)
 
       if(categoryId){
         const category = await this.categoryService.findOne({id:categoryId});
-        console.log(category)
         newProduct.category = category ;
       }
 
@@ -80,12 +83,14 @@ export class ProductService {
   async update(id: string, updateProductDto: UpdateProductDto):Promise<StatusResult>{
     const {
       categoryId , 
-      color , 
+      score ,
       count , 
       description ,
-      // images ,
-      name , 
-      size , 
+      name ,  
+      isDigital , 
+      comments , 
+      tags , 
+      weight , 
       inـstock 
     } = updateProductDto ;
 
@@ -110,13 +115,15 @@ export class ProductService {
                 .createQueryBuilder()
                 .update(Product)
                 .set({
-                  category , 
-                  color , 
+                  score ,
                   count , 
-                  description , 
-                  name , 
-                  size , 
-                  inـstock ,
+                  description ,
+                  name ,  
+                  isDigital , 
+                  comments , 
+                  tags , 
+                  weight , 
+                  inـstock 
                 })
                 .where('id = :id' , {id})
                 .execute()

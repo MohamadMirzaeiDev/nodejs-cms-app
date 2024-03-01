@@ -13,6 +13,10 @@ export class Category {
     image : string ; 
 
 
+    @Column({type : 'boolean' , nullable : true , default : true})
+    visibale : boolean;
+
+
     @OneToMany(()=> Product , (product)=>product.category)
     products : Product[] ;
 }

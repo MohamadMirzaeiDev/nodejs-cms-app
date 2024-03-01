@@ -7,6 +7,7 @@ import { HasRole } from 'src/auth/decorator/role.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/role.guard';
 import { Role } from 'src/user/enum/role.enum';
+import { RemoveProductDto } from './dto/remove-product.dto';
 
 @ApiTags('Category')
 @ApiBearerAuth('access-token')
@@ -51,6 +52,22 @@ export class CategoryController {
 
     return result
   }
+
+
+  @Delete(':id/removeProduct')
+  @HasRole(Role.ADMIN)   
+  @UseGuards(JwtAuthGuard , RolesGuard)
+  async removeProduct(@Body() removeProductDto:RemoveProductDto , @Param('id') id: string) {
+    const { productId } = removeProductDto
+    const result = await this.categoryService.removeProduct(productId , id);
+
+      if(!result.success){
+        throw new BadRequestException(result.message);
+    }
+
+    return result
+  }
+
 
   @Delete(':id')
   @HasRole(Role.ADMIN)   
