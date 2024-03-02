@@ -3,7 +3,7 @@ export const randomIntGenerator = (length:number)=>{
     let otp = '';
 
     for(let i  = 0 ; i < length ; i++){
-        otp += digis[Math.floor(Math.random() * 10).toString()]
+        otp += digis[Math.floor(Math.random() * 10)]
     }
 
     return otp ; 

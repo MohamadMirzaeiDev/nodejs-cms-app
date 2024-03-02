@@ -18,16 +18,14 @@ export class ProductService {
 
   async create(createProductDto: CreateProductDto):Promise<StatusResult>{
     const {
-      categoryId , 
-      score ,
+      categoryId ,
       count , 
       description ,
       name ,  
-      isDigital , 
-      comments , 
+      isDigital ,  
       tags , 
-      weight , 
-      inـstock 
+      weight ,
+      price 
     } = createProductDto ;
 
     const statusResult:StatusResult = {
@@ -39,13 +37,17 @@ export class ProductService {
       const newProduct = new Product();
       newProduct.name = name ;
       newProduct.description = description ;
-      newProduct.score =  score; 
       newProduct.count = count ;
-      newProduct.inـstock = inـstock ;
       newProduct.weight = weight; 
       newProduct.tags = tags ;
-      newProduct.comments = comments ; 
       newProduct.isDigital = isDigital ;
+      newProduct.price = price ;
+
+      if(count > 0){
+        newProduct.inـstock = true ; 
+      }else{
+        newProduct.inـstock = false ; 
+      }
 
 
       if(categoryId){
@@ -83,15 +85,13 @@ export class ProductService {
   async update(id: string, updateProductDto: UpdateProductDto):Promise<StatusResult>{
     const {
       categoryId , 
-      score ,
       count , 
       description ,
       name ,  
       isDigital , 
-      comments , 
       tags , 
       weight , 
-      inـstock 
+      price , 
     } = updateProductDto ;
 
 
@@ -101,32 +101,35 @@ export class ProductService {
     }
 
     try {
-      await this.findOne(id)
+      const product = await this.findOne(id);
+
       let category:Category | null; 
 
       if(categoryId){
-        const res  = await this.categoryService.findOne({id:categoryId});
+        const res = await this.categoryService.findOne({id:categoryId});
 
         category = res ;
       }else {
         category = null
       }
-      await this.productRepo
-                .createQueryBuilder()
-                .update(Product)
-                .set({
-                  score ,
-                  count , 
-                  description ,
-                  name ,  
-                  isDigital , 
-                  comments , 
-                  tags , 
-                  weight , 
-                  inـstock 
-                })
-                .where('id = :id' , {id})
-                .execute()
+
+      product.name = name ;
+      product.description = description ;
+      product.count = count ;
+      product.weight = weight; 
+      product.tags = tags ;
+      product.isDigital = isDigital ;
+      product.price = price ;
+      product.category = category ; 
+
+      if(count > 0){
+        product.inـstock = true ; 
+      }else{
+        product.inـstock = false ;
+      }
+
+      
+      await this.productRepo.save(product);
                 
     } catch (error) {
      return {

@@ -1,6 +1,7 @@
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Role } from "../enum/role.enum";
 import * as bcrypt from 'bcrypt';
+import { Order } from "src/order/entities/order.entity";
 @Entity({name : "User"})
 export class User {
     @PrimaryGeneratedColumn('uuid')
@@ -50,4 +51,6 @@ export class User {
     @Column({type : 'varchar' , nullable : true})
     note : string ; 
 
+    @OneToMany(()=>Order , (order)=>order.user)
+    orders : Order[] ;
 }
