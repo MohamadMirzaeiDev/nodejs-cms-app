@@ -20,8 +20,8 @@ export class Product {
     @Column({type : 'varchar' , nullable : false})
     description : string ; 
 
-    @Column({type : 'varchar' , nullable : false})
-    price : string ; 
+    @Column({type : 'int' , nullable : false})
+    price : number ; 
 
     @Column({type : 'int' , default : randomIntGenerator(2)})
     comments : number ;
@@ -43,6 +43,9 @@ export class Product {
 
     @Column({type : 'boolean' , default : false})
     inـstock :boolean ; 
+
+    @Column({type : 'varchar' , nullable : false})
+    country : string ; 
 
     @ManyToOne(()=>Category , (category)=>category.products)
     category:Category ;
