@@ -1,8 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Put, Req, BadRequestException, NotFoundException } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { RolesGuard } from 'src/auth/guards/role.guard';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { Role } from 'src/user/enum/role.enum';
+import { HasRole } from 'src/auth/decorator/role.decorator';
+import { Request } from 'express';
+import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 
 @ApiTags('Order')
 @ApiBearerAuth('access-token')
@@ -11,27 +17,63 @@ export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
   @Post()
-  create(@Body() createOrderDto: CreateOrderDto) {
-    return this.orderService.create(createOrderDto);
+  @HasRole(Role.ADMIN)   
+  @UseGuards(JwtAuthGuard , RolesGuard)
+  async create(@Body() createOrderDto: CreateOrderDto, @Req() req:Request) {
+    const result = await this.orderService.create(createOrderDto , req.user);
+
+    if(!result.success){
+      throw new BadRequestException(result.message);
+    }
+
+    return result ;
   }
 
   @Get()
-  findAll() {
-    return this.orderService.findAll();
+  @HasRole(Role.ADMIN)   
+  @UseGuards(JwtAuthGuard , RolesGuard)
+  async findAll() {
+    return await this.orderService.findAll();
   }
 
   @Get(':id')
+  @HasRole(Role.ADMIN)   
+  @UseGuards(JwtAuthGuard , RolesGuard)
   findOne(@Param('id') id: string) {
-    return this.orderService.findOne(+id);
+    return this.orderService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
-    return this.orderService.update(+id, updateOrderDto);
+  @Put(':id')
+  @HasRole(Role.ADMIN)   
+  @UseGuards(JwtAuthGuard , RolesGuard)
+  async update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
+    const result = await this.orderService.update(id, updateOrderDto);
+
+    if(!result.success){
+      throw new BadRequestException(result.message);
+    }
+
+    return result ;
+  }
+
+
+  @Put(':id/status')
+  @HasRole(Role.ADMIN)   
+  @UseGuards(JwtAuthGuard , RolesGuard)
+  async updateStatus(@Param('id') id: string, @Body() updateOrderStatusDto: UpdateOrderStatusDto) {
+    const result = await this.orderService.updateStatus(id, updateOrderStatusDto);
+
+    if(!result.success){
+      throw new BadRequestException(result.message);
+    }
+
+    return result ; 
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.orderService.remove(+id);
+  @HasRole(Role.ADMIN)   
+  @UseGuards(JwtAuthGuard , RolesGuard)
+  async remove(@Param('id') id: string) {
+    return await this.orderService.remove(id);
   }
 }

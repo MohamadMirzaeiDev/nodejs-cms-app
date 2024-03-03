@@ -1,26 +1,133 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
+import { StatusResult } from 'src/shared/status-result/status-result';
+import { Repository } from 'typeorm';
+import { Order } from './entities/order.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ProductService } from 'src/product/product.service';
+import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 
 @Injectable()
 export class OrderService {
-  create(createOrderDto: CreateOrderDto) {
-    return 'This action adds a new order';
+  constructor(
+    @InjectRepository(Order)
+    private readonly orderRepo:Repository<Order>,
+    private readonly productService:ProductService 
+  ){}
+
+  async create(createOrderDto: CreateOrderDto , user:any):Promise<StatusResult>{
+    const { productId  , product_count} = createOrderDto ;
+    const statusResult:StatusResult = {
+      message : 'Item created successfully' ,
+      success : true 
+    }
+
+    try {
+      const product = await this.productService.findOne(productId);
+
+      const orderExist = await this.orderRepo.findOne({where : {product : {id : product.id}}})
+
+
+      if(orderExist){
+        throw new BadRequestException('Order is exist')
+      }
+
+      if(product.count < product_count){
+        throw new BadRequestException('The number of products in the warehouse is less than your request')
+      }
+
+      const total_price = product.price * product_count ;
+
+      const newOrder = new Order()
+      newOrder.total_price = total_price ;
+      newOrder.user = user ;
+      newOrder.product_count = product_count ;
+      newOrder.product = product ;
+      
+      const result = await this.orderRepo.save(newOrder);
+      statusResult.Id = result.id ; 
+    } catch (error) {
+      return {
+        message : error.message , 
+        success : false , 
+      }
+    }
+
+
+    return statusResult ; 
   }
 
-  findAll() {
-    return `This action returns all order`;
+  async findAll():Promise<Order[]>{
+    return await this.orderRepo.find({relations : {user : true , product : true}})
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} order`;
+  async findOne(id: string):Promise<Order>{
+    const order = await this.orderRepo.findOne({where : {id} ,relations : {user : true , product : true}});
+
+    if(!order){
+      throw new NotFoundException('Order not found')
+    }
+    
+    return order ;
   }
 
-  update(id: number, updateOrderDto: UpdateOrderDto) {
-    return `This action updates a #${id} order`;
+
+  async updateStatus(id:string, updateOrderStatusDto:UpdateOrderStatusDto):Promise<StatusResult>{
+    const { status } = updateOrderStatusDto;
+
+    try {
+      const order = await this.findOne(id);
+      order.status = status ;
+      await this.orderRepo.save(order);
+    } catch (error) {
+      return {
+        message : error.message , 
+        success : false 
+      }
+    }
+    
+    return {
+      message : 'Status edited successfully',
+      success : true 
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} order`;
+  async update(id: string, updateOrderDto: UpdateOrderDto):Promise<StatusResult>{
+    const {product_count} = updateOrderDto;
+
+    try {
+      const order = await this.findOne(id);
+      const product = await this.productService.findOne(order.product.id);
+
+      if(product.count < product_count){
+        throw new BadRequestException('The number of products in the warehouse is less than your request')
+      }
+
+      const total_price = product_count * product.price ;
+
+      order.total_price = total_price ;
+      order.product_count = product_count ;
+
+      await this.orderRepo.save(order);
+    } catch (error) {
+      return {
+        message : error.message , 
+        success : false ,
+      }
+    }
+
+    return {
+      message : 'Item edited successfully',
+      success : true ,
+    }
+  }
+
+  async remove(id: string):Promise<StatusResult>{
+    await this.orderRepo.delete({id})
+    return {
+      message : 'Item removed successfully',
+      success : true , 
+    }
   }
 }

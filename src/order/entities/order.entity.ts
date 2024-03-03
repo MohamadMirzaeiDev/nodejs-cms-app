@@ -8,14 +8,14 @@ export class Order {
     @PrimaryGeneratedColumn('uuid')
     id : string ; 
 
-    @Column({type : "varchar" , nullable : false})
-    total_price : string ; 
+    @Column({type : "int" , nullable : true , default : 0})
+    total_price : number ; 
     
     @Column({type : "int" , nullable : false})
-    count : number ; 
+    product_count : number ; 
 
     @Column({type : 'enum' , enum : OrderStatus , default : OrderStatus.PENDING})
-    Status : OrderStatus ;
+    status : OrderStatus ;
 
     @Column({type : 'date' , default : new Date()})
     created_at : Date ; 
