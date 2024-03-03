@@ -25,7 +25,8 @@ export class ProductService {
       isDigital ,  
       tags , 
       weight ,
-      price 
+      price , 
+      country ,
     } = createProductDto ;
 
     const statusResult:StatusResult = {
@@ -42,6 +43,7 @@ export class ProductService {
       newProduct.tags = tags ;
       newProduct.isDigital = isDigital ;
       newProduct.price = price ;
+      newProduct.country = country ;
 
       if(count > 0){
         newProduct.inـstock = true ; 
@@ -92,6 +94,7 @@ export class ProductService {
       tags , 
       weight , 
       price , 
+      country ,
     } = updateProductDto ;
 
 
@@ -120,6 +123,7 @@ export class ProductService {
       product.tags = tags ;
       product.isDigital = isDigital ;
       product.price = price ;
+      product.country = country ;
       product.category = category ; 
 
       if(count > 0){
