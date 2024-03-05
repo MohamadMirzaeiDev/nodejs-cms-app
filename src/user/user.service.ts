@@ -97,11 +97,15 @@ export class UserService {
       postal_code ,
     } = createUserDto ;
 
-    if(await this.findOne({email})){
+    const emailExist = await this.findOne({email})
+
+    if(emailExist){
       throw new BadRequestException('this email alredy exist')
     }
 
-    if(await this.findOne({username})){
+    const usernameExist = await this.findOne({username})
+
+    if(usernameExist){
       throw new BadRequestException('this username alredy exist')
     }
 
