@@ -47,7 +47,7 @@ export class Product {
     @Column({type : 'varchar' , nullable : false})
     country : string ; 
 
-    @ManyToOne(()=>Category , (category)=>category.products)
+    @ManyToOne(()=>Category , (category)=>category.products , {cascade : true ,onDelete: "CASCADE"})
     category:Category ;
 
     @OneToMany(()=>Order , (order)=>order.product)
