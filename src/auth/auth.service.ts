@@ -50,7 +50,13 @@ export class AuthService {
         const token = await this._signToken(payload);
 
 
-        return {token} ; 
+        return {
+            token , 
+            roles : savedUser.roles ,
+            email : savedUser.email , 
+            first_name : savedUser.first_name ,
+            last_name : savedUser.last_name ,
+        } ; 
 
     }
 
@@ -79,7 +85,13 @@ export class AuthService {
         const token = await this._signToken(payload);
 
 
-        return {token} ; 
+        return {
+            token , 
+            roles : user.roles ,
+            first_name : user.first_name , 
+            last_name : user.last_name , 
+            email : user.email 
+        } ; 
     }
 
 
