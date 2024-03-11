@@ -2,6 +2,7 @@ import { BeforeInsert, Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColu
 import { Role } from "../enum/role.enum";
 import * as bcrypt from 'bcrypt';
 import { Order } from "src/order/entities/order.entity";
+import { randomIntGenerator } from "src/shared/random-int-generator/random-int-generator";
 @Entity({name : "User"})
 export class User {
     @PrimaryGeneratedColumn('uuid')
@@ -50,6 +51,12 @@ export class User {
 
     @Column({type : 'varchar' , nullable : true})
     note : string ; 
+
+    @Column({type : 'int' ,default : randomIntGenerator(2)})
+    order_count : number ; 
+
+    @Column({type : 'int' ,default : randomIntGenerator(5)})
+    purchase_amount:number;
 
     @OneToMany(()=>Order , (order)=>order.user)
     orders : Order[] ;
