@@ -1,7 +1,7 @@
-import { BadRequestException, HttpException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { FindOptionsWhere, Repository } from 'typeorm';
+import { ArrayContains, FindOptionsWhere, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { StatusResult } from 'src/shared/status-result/status-result';
@@ -19,11 +19,15 @@ export class UserService {
     private readonly userRepo:Repository<User> , 
   ){}
 
-  async findAll() :Promise<User[]>{
-    return this.userRepo.find({})
+  async findAllAdmin():Promise<User[]>{
+    return await this.userRepo.find({where : {roles : ArrayContains([Role.ADMIN])}})
   }
 
-  async findOne(where:Where) {
+  async findAll() :Promise<User[]>{
+    return await this.userRepo.find({})
+  }
+
+  async findOne(where:Where):Promise<User>{
     return await this.userRepo.findOne({where});
   }
 
@@ -80,7 +84,7 @@ export class UserService {
     
   }
 
-  async create(createUserDto:CreateUserDto):Promise<User>{
+  async create(createUserDto:CreateUserDto):Promise<UserDto>{
     const {
       email , 
       first_name ,
@@ -127,7 +131,7 @@ export class UserService {
 
     const result = await this.userRepo.save(user);
 
-    return result ; 
+    return new UserDto(result) ; 
   }
 
   async update(id: string, updateUserDto: UpdateUserDto):Promise<StatusResult>{
