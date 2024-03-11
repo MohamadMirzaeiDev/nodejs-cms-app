@@ -12,6 +12,8 @@ import { AdminModule } from './admin/admin.module';
 import { ProductModule } from './product/product.module';
 import { CategoryModule } from './category/category.module';
 import { OrderModule } from './order/order.module';
+import { CouponModule } from './coupon/coupon.module';
+import { ManagerModule } from "./manager/manager.module";
 
 
 @Module({
@@ -24,7 +26,9 @@ import { OrderModule } from './order/order.module';
         AdminModule,
         CategoryModule ,
         ProductModule,
-        OrderModule , 
+        OrderModule,
+        CouponModule , 
+        ManagerModule
     ],
     controllers : [],
     exports : []
