@@ -15,6 +15,8 @@ export class UserDto {
     city : string ; 
     postal_code: string ;
     note : string ; 
+    purchase_amount : number ; 
+    order_count : number ; 
 
     constructor(user:any){
         this.id = user.id ;
@@ -30,5 +32,7 @@ export class UserDto {
         this.home_phone_number = user.home_phone_number ;
         this.postal_code = user.postal_code ;
         this.note = user.note ;
+        this.order_count = user.order_count ;
+        this.purchase_amount = user.purchase_amount ; 
     }
 }
