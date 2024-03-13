@@ -11,4 +11,8 @@ export class CreateOrderDto {
     @ApiProperty()
     @IsNotEmpty()
     productId : string ; 
+
+    @ApiProperty()
+    @IsNotEmpty()
+    userId : string ; 
 }

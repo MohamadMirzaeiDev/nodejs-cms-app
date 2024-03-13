@@ -45,6 +45,13 @@ export class UserController {
         return user
     }
 
+    @Get(':id/order/')
+    @HasRole(Role.ADMIN)   
+    @UseGuards(JwtAuthGuard , RolesGuard)
+    async findUserOrder(@Param('id') id:string){
+        return this.userService.findUserOrder(id)
+    }
+
     
     @Post('')
     @HasRole(Role.ADMIN)   

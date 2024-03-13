@@ -7,6 +7,8 @@ import { Product } from './entities/product.entity';
 import { In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from 'src/category/entities/category.entity';
+import { randomIntGenerator } from 'src/shared/random-int-generator/random-int-generator';
+import { OrderService } from 'src/order/order.service';
 
 @Injectable()
 export class ProductService {
@@ -14,6 +16,8 @@ export class ProductService {
     @InjectRepository(Product)
     private readonly productRepo:Repository<Product> ,
     private readonly categoryService:CategoryService , 
+    @Inject(forwardRef(()=>OrderService))
+    private readonly orderService:OrderService ,
   ){}
 
   async create(createProductDto: CreateProductDto):Promise<StatusResult>{
@@ -36,6 +40,7 @@ export class ProductService {
 
     try {
       const newProduct = new Product();
+      newProduct.unique_id = randomIntGenerator(6);
       newProduct.name = name ;
       newProduct.description = description ;
       newProduct.count = count ;
@@ -44,6 +49,8 @@ export class ProductService {
       newProduct.isDigital = isDigital ;
       newProduct.price = price ;
       newProduct.country = country ;
+      newProduct.comments = Number(randomIntGenerator(3));
+      newProduct.score = Number(randomIntGenerator(3));
 
       if(count > 0){
         newProduct.inـstock = true ; 
@@ -72,6 +79,12 @@ export class ProductService {
 
   async findAll():Promise<Product[]>{
     return await this.productRepo.find({relations : {category : true}})
+  }
+
+
+  async findOrder(id:string){
+    const product = await this.findOne(id) ; // check product 
+    return await this.orderService.getProductOrder(product.id);
   }
 
   async findOne(id : string){

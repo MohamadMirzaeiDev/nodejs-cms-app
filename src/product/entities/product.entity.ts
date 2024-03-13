@@ -1,6 +1,5 @@
 import { Category } from "src/category/entities/category.entity";
-import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { randomIntGenerator } from 'src/shared/random-int-generator/random-int-generator'
+import { Column, Entity, ManyToOne, OneToMany   , PrimaryGeneratedColumn } from "typeorm";
 import { Order } from "src/order/entities/order.entity";
 
 @Entity({name : 'Product'})
@@ -8,7 +7,7 @@ export class Product {
     @PrimaryGeneratedColumn('uuid')
     id:string;
 
-    @Column({type : 'varchar'  , default : randomIntGenerator(6).toString() ,})
+    @Column({type : 'varchar' , nullable: false})
     unique_id : string ; 
 
     @Column({type : 'varchar' , array : true , nullable : true})
@@ -23,7 +22,7 @@ export class Product {
     @Column({type : 'int' , nullable : false})
     price : number ; 
 
-    @Column({type : 'int' , default : randomIntGenerator(2)})
+    @Column({type : 'int' , nullable : false })
     comments : number ;
 
     @Column({type : 'varchar' , array : true , nullable :false})
@@ -35,7 +34,7 @@ export class Product {
     @Column({type : 'boolean' , nullable : false })
     isDigital :boolean ; 
 
-    @Column({type : 'int' , default : randomIntGenerator(1)})
+    @Column({type : 'int' , nullable : false })
     score : number ; 
 
     @Column({type : 'int' , nullable : false})

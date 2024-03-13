@@ -12,7 +12,9 @@ import { HasRole } from 'src/auth/decorator/role.decorator';
 @ApiBearerAuth('access-token')
 @Controller('product')
 export class ProductController {
-  constructor(private readonly productService: ProductService) {}
+  constructor(
+    private readonly productService: ProductService ,
+  ) {}
 
   @Post()
   @HasRole(Role.ADMIN)   
@@ -39,6 +41,13 @@ export class ProductController {
   @UseGuards(JwtAuthGuard , RolesGuard)
   async findOne(@Param('id') id: string) {
     return await this.productService.findOne(id)
+  }
+
+  @Get(':id/order/')
+  @HasRole(Role.ADMIN)   
+  @UseGuards(JwtAuthGuard , RolesGuard)
+  async findProductOrders(@Param('id') id: string) {
+    return await this.productService.findOrder(id)
   }
 
   @Put(':id')

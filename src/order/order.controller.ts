@@ -19,8 +19,8 @@ export class OrderController {
   @Post()
   @HasRole(Role.ADMIN)   
   @UseGuards(JwtAuthGuard , RolesGuard)
-  async create(@Body() createOrderDto: CreateOrderDto, @Req() req:Request) {
-    const result = await this.orderService.create(createOrderDto , req.user);
+  async create(@Body() createOrderDto: CreateOrderDto) {
+    const result = await this.orderService.create(createOrderDto);
 
     if(!result.success){
       throw new BadRequestException(result.message);
@@ -42,20 +42,6 @@ export class OrderController {
   findOne(@Param('id') id: string) {
     return this.orderService.findOne(id);
   }
-
-  @Put(':id')
-  @HasRole(Role.ADMIN)   
-  @UseGuards(JwtAuthGuard , RolesGuard)
-  async update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
-    const result = await this.orderService.update(id, updateOrderDto);
-
-    if(!result.success){
-      throw new BadRequestException(result.message);
-    }
-
-    return result ;
-  }
-
 
   @Put(':id/status')
   @HasRole(Role.ADMIN)   

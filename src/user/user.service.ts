@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, NotFoundException, forwardRef } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ArrayContains, FindOptionsWhere, Repository } from 'typeorm';
@@ -9,6 +9,7 @@ import { UserDto } from './dto/user.dto';
 import { SignUpDto } from 'src/auth/dto/sign-up.dto';
 import { Role } from './enum/role.enum';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { OrderService } from 'src/order/order.service';
 
 type Where = FindOptionsWhere<User>
 
@@ -16,19 +17,26 @@ type Where = FindOptionsWhere<User>
 export class UserService {
   constructor(
     @InjectRepository(User)
-    private readonly userRepo:Repository<User> , 
+    private readonly userRepo:Repository<User> ,
+    @Inject(forwardRef(()=>OrderService))
+    private readonly orderService:OrderService , 
   ){}
 
   async findAllAdmin():Promise<User[]>{
-    return await this.userRepo.find({where : {roles : ArrayContains([Role.ADMIN])}})
+    return await this.userRepo.find({where : {roles : ArrayContains([Role.ADMIN])}, relations : {orders: true}})
+  }
+
+  async findUserOrder(id:string){
+    const user = await this.findById(id);
+    return this.orderService.getUserOrder(user.id)
   }
 
   async findAll() :Promise<User[]>{
-    return await this.userRepo.find({})
+    return await this.userRepo.find({relations : {orders:true}})
   }
 
   async findOne(where:Where):Promise<User>{
-    return await this.userRepo.findOne({where});
+    return await this.userRepo.findOne({where , relations  : { orders : true}});
   }
 
   async findById(id:string):Promise<User>{
@@ -46,6 +54,7 @@ export class UserService {
     return await this.userRepo.count();
   }
 
+
   async signUp(signUpDto:SignUpDto):Promise<UserDto>{
     const {
       email , 
@@ -56,11 +65,15 @@ export class UserService {
     }=signUpDto;
 
 
-    if(await this.findOne({email})){
+    const emailExist = await this.findOne({email})
+
+    if(emailExist){
       throw new BadRequestException('this email alredy exist')
     }
 
-    if(await this.findOne({username})){
+    const usernameExist = await this.findOne({username})
+
+    if(usernameExist){
       throw new BadRequestException('this username alredy exist')
     }
 
@@ -134,9 +147,19 @@ export class UserService {
     return new UserDto(result) ; 
   }
 
+
+  async updateOrderInfo(userId:string , order_count:number , purchase_amount:number){
+    const user = await this.userRepo.findOne({where : {id:userId}})
+
+    user.purchase_amount = purchase_amount ;
+    user.order_count = order_count ;
+
+    await this.userRepo.save(user);
+    return true ; 
+  }
+
   async update(id: string, updateUserDto: UpdateUserDto):Promise<StatusResult>{
     const {
-      
       first_name , 
       last_name , 
       roles , 
