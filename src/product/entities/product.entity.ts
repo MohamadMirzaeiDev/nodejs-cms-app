@@ -37,6 +37,9 @@ export class Product {
     @Column({type : 'int' , nullable : false })
     score : number ; 
 
+    @Column({type : 'int' , nullable : true })
+    star : number ; 
+
     @Column({type : 'int' , nullable : false})
     count : number ;
 

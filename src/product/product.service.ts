@@ -9,6 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from 'src/category/entities/category.entity';
 import { randomIntGenerator } from 'src/shared/random-int-generator/random-int-generator';
 import { OrderService } from 'src/order/order.service';
+import { randomIntFromInterval } from 'src/shared/random-int-generator/random-int';
 
 @Injectable()
 export class ProductService {
@@ -49,6 +50,7 @@ export class ProductService {
       newProduct.country = country ;
       newProduct.comments = Number(randomIntGenerator(3));
       newProduct.score = Number(randomIntGenerator(3));
+      newProduct.star = randomIntFromInterval(1,6)
 
       if(count > 0){
         newProduct.inـstock = true ; 
