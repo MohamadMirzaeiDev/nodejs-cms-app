@@ -1,6 +1,5 @@
 import { BadRequestException, Inject, Injectable, NotFoundException, forwardRef } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
 import { StatusResult } from 'src/shared/status-result/status-result';
 import { Repository } from 'typeorm';
 import { Order } from './entities/order.entity';
@@ -21,16 +20,16 @@ export class OrderService {
   ){}
 
   async create(createOrderDto: CreateOrderDto):Promise<StatusResult>{
-    const { productId  , product_count , userId} = createOrderDto ;
+    const { productId  , product_count , email} = createOrderDto ;
     const statusResult:StatusResult = {
       message : 'Item created successfully' ,
       success : true 
     }
 
     try {
-      const user = await this.userService.findById(userId);
-      const product = await this.productService.findOne(productId);
-      const orderExist = await this.orderRepo.findOne({where : {product : {id : product.id}}})
+      const user = await this.userService.findByEmail(email);
+      const product = await this.productService.findByUniqueId(productId);
+      const orderExist = await this.orderRepo.findOne({where : {product : {id : product.id} , user : {id : user.id}}})
 
 
       if(orderExist){

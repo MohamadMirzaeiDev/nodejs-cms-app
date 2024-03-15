@@ -9,7 +9,6 @@ import { OrderModule } from 'src/order/order.module';
 @Module({
   imports:[
     TypeOrmModule.forFeature([Product]),
-    forwardRef(()=>OrderModule) , 
     CategoryModule ,
   ],
   controllers: [ProductController],

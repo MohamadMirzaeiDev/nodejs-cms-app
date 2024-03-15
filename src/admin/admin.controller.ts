@@ -4,7 +4,6 @@ import { Request } from 'express';
 import { HasRole } from "src/auth/decorator/role.decorator";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
 import { RolesGuard } from "src/auth/guards/role.guard";
-import { UserDto } from "src/user/dto/user.dto";
 import { Role } from "src/user/enum/role.enum";
 import { ChangePasswordDto } from "./dto/change-password.dto";
 import { UserService } from "src/user/user.service";
@@ -22,7 +21,7 @@ export class AdminController {
     @HasRole(Role.ADMIN)
     @UseGuards(JwtAuthGuard , RolesGuard)
     async me(@Req() req:Request){
-        return new UserDto(req.user) ;
+        return req.user ; 
     }
 
     @Put('/password')

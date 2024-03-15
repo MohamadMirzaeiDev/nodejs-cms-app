@@ -16,8 +16,6 @@ export class ProductService {
     @InjectRepository(Product)
     private readonly productRepo:Repository<Product> ,
     private readonly categoryService:CategoryService , 
-    @Inject(forwardRef(()=>OrderService))
-    private readonly orderService:OrderService ,
   ){}
 
   async create(createProductDto: CreateProductDto):Promise<StatusResult>{
@@ -81,12 +79,6 @@ export class ProductService {
     return await this.productRepo.find({relations : {category : true}})
   }
 
-
-  async findOrder(id:string){
-    const product = await this.findOne(id) ; // check product 
-    return await this.orderService.getProductOrder(product.id);
-  }
-
   async findOne(id : string){
     const product = await this.productRepo.findOne({where : {id} , relations : {category : true}})
 
@@ -95,6 +87,16 @@ export class ProductService {
     }
 
     return product ; 
+  }
+
+  async findByUniqueId(uniqueId:string):Promise<Product>{
+    const product = await this.productRepo.findOne({where : {unique_id : uniqueId}})
+
+    if(!product){
+      throw new NotFoundException('product not founded')
+    }
+
+    return product
   }
 
   async update(id: string, updateProductDto: UpdateProductDto):Promise<StatusResult>{

@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsNumber, Max } from "class-validator";
+import { IsEmail, IsNotEmpty, IsNumber, Max } from "class-validator";
 
 export class CreateOrderDto {
     @ApiProperty()
@@ -14,5 +14,6 @@ export class CreateOrderDto {
 
     @ApiProperty()
     @IsNotEmpty()
-    userId : string ; 
+    @IsEmail()
+    email : string ; 
 }

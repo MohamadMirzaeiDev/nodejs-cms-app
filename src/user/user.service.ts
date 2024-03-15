@@ -5,7 +5,6 @@ import { ArrayContains, FindOptionsWhere, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { StatusResult } from 'src/shared/status-result/status-result';
-import { UserDto } from './dto/user.dto';
 import { SignUpDto } from 'src/auth/dto/sign-up.dto';
 import { Role } from './enum/role.enum';
 import { ChangePasswordDto } from './dto/change-password.dto';
@@ -39,6 +38,18 @@ export class UserService {
     return await this.userRepo.findOne({where , relations  : { orders : true}});
   }
 
+
+  async findByEmail(email:string):Promise<User>{
+    const user = await this.findOne({email})
+
+
+    if(!user){
+      throw new NotFoundException('This email not found')
+    }
+
+    return user ; 
+  }
+
   async findById(id:string):Promise<User>{
     const user = await this.userRepo.findOneBy({id})
 
@@ -55,7 +66,7 @@ export class UserService {
   }
 
 
-  async signUp(signUpDto:SignUpDto):Promise<UserDto>{
+  async signUp(signUpDto:SignUpDto):Promise<User>{
     const {
       email , 
       first_name , 
@@ -93,11 +104,11 @@ export class UserService {
 
     const newUser = await this.userRepo.save(user);
 
-    return new UserDto(newUser);
+    return newUser
     
   }
 
-  async create(createUserDto:CreateUserDto):Promise<UserDto>{
+  async create(createUserDto:CreateUserDto):Promise<User>{
     const {
       email , 
       first_name ,
@@ -144,7 +155,7 @@ export class UserService {
 
     const result = await this.userRepo.save(user);
 
-    return new UserDto(result) ; 
+    return result
   }
 
 
@@ -163,6 +174,13 @@ export class UserService {
       first_name , 
       last_name , 
       roles , 
+      address , 
+      city , 
+      country , 
+      note , 
+      postal_code , 
+      phone_number , 
+      home_phone_number
     } = updateUserDto ; 
 
     const result:StatusResult = {
@@ -180,6 +198,13 @@ export class UserService {
                   first_name , 
                   last_name, 
                   roles ,
+                  address , 
+                  city , 
+                  country , 
+                  note , 
+                  postal_code , 
+                  phone_number , 
+                  home_phone_number
                 })
                 .where("id = :id",{id})
                 .execute()

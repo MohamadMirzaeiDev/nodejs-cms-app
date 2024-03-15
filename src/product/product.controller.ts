@@ -43,13 +43,6 @@ export class ProductController {
     return await this.productService.findOne(id)
   }
 
-  @Get(':id/order/')
-  @HasRole(Role.ADMIN)   
-  @UseGuards(JwtAuthGuard , RolesGuard)
-  async findProductOrders(@Param('id') id: string) {
-    return await this.productService.findOrder(id)
-  }
-
   @Put(':id')
   @HasRole(Role.ADMIN)   
   @UseGuards(JwtAuthGuard , RolesGuard)

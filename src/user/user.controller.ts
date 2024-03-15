@@ -7,7 +7,6 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { RolesGuard } from "src/auth/guards/role.guard";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
-import { UserDto } from "./dto/user.dto";
 import { ChangePasswordDto } from "./dto/change-password.dto";
 
 
@@ -23,20 +22,14 @@ export class UserController {
     @HasRole(Role.ADMIN)   
     @UseGuards(JwtAuthGuard , RolesGuard) 
     async findAll(){
-        const users = await this.userService.findAll()
-
-        const result = users.map((user)=>{
-          return new UserDto(user) 
-        })
-
-        return result ;  
+        return await this.userService.findAll()
     }
 
     @Get(':id')
     @HasRole(Role.ADMIN)   
     @UseGuards(JwtAuthGuard , RolesGuard)
     async findOne(@Param('id') id:string){
-        const user = new UserDto(await this.userService.findOne({id}))
+        const user = this.userService.findOne({id})
         
         if(!user){
             throw new NotFoundException('invalid request')
