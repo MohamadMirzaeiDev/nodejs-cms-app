@@ -4,16 +4,16 @@ import { IsEmail, IsNotEmpty, IsNumber, Max } from "class-validator";
 export class CreateOrderDto {
     @ApiProperty()
     @IsNotEmpty()
-    @Max(40)
     @IsNumber()
-    product_count:number  ;
+    @Max(40 , {message : 'Invalid value'})
+    product_count:number;
 
     @ApiProperty()
     @IsNotEmpty()
-    productId : string ; 
+    productId:string; 
 
     @ApiProperty()
     @IsNotEmpty()
     @IsEmail()
-    email : string ; 
+    email:string; 
 }
