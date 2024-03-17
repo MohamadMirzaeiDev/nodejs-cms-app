@@ -5,7 +5,7 @@ export class CreateOrderDto {
     @ApiProperty()
     @IsNotEmpty()
     @IsNumber()
-    @Max(40 , {message : 'Invalid value'})
+    @Max(40 , {message : 'The number of imported products is greater than the available number'})
     product_count:number;
 
     @ApiProperty()
