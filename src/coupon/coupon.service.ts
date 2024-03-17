@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Coupon } from './entities/coupon.entity';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { StatusResult } from 'src/shared/status-result/status-result';
+import { CouponStatus } from './enum/coupon.enum';
 
 type Where = FindOptionsWhere<Coupon> ;
 
@@ -17,12 +18,11 @@ export class CouponService {
 
   async create(createCouponDto: CreateCouponDto):Promise<StatusResult>{
     const {
-      description , 
-      expire_time , 
-      isActive , 
-      name , 
-      status ,
+      name ,
       type ,
+      code , 
+      duration , 
+      value 
     } = createCouponDto ; 
 
     const statusResult:StatusResult = {
@@ -31,13 +31,7 @@ export class CouponService {
     }
 
     try {
-      const currentDate = new Date();
-    
-      if(expire_time < currentDate){
-        throw new BadRequestException('the time exised in current time ')
-      }
-
-      const couponExist = await this.couponRepo.findOne({where : {name}});
+      const couponExist = await this.couponRepo.findOne({where : {code}});
 
       if(couponExist){
         throw new BadRequestException('Coupon alredy exist')
@@ -46,11 +40,18 @@ export class CouponService {
 
       const newCoupon = new Coupon()
         newCoupon.name = name ;
-        newCoupon.description = description ; 
-        newCoupon.expire_time = expire_time ;
-        newCoupon.isActive = isActive;
-        newCoupon.status = status ; 
+        newCoupon.code = code;
+        newCoupon.duration = duration;
+        newCoupon.value = value;
         newCoupon.type = type ; 
+
+      const currentDate = new Date();
+    
+      if(duration < currentDate){
+        newCoupon.status = CouponStatus.INVALID 
+      }else {
+        newCoupon.status = CouponStatus.VALID 
+      }
 
       const savedCoupon = await this.couponRepo.save(newCoupon);
       statusResult.Id = savedCoupon.id ;
@@ -80,12 +81,11 @@ export class CouponService {
 
   async update(id: string, updateCouponDto: UpdateCouponDto):Promise<StatusResult>{
     const {
-      description , 
+      code , 
+      duration , 
       name , 
-      status , 
-      type ,
-      expire_time , 
-      isActive ,
+      type , 
+      value
     } = updateCouponDto ;
 
     try {
@@ -93,17 +93,18 @@ export class CouponService {
       const currentDate = new Date();
 
 
-      if(expire_time < currentDate){
-        throw new BadRequestException('the time exised in current time ')
+      if(duration < currentDate){
+        coupon.status = CouponStatus.INVALID
+      }else{
+        coupon.status = CouponStatus.VALID
       }
 
 
-      coupon.description = description ;
+      coupon.code = code ;
       coupon.name = name ; 
-      coupon.status = status ;
       coupon.type = type ; 
-      coupon.expire_time = expire_time ;
-      coupon.isActive = isActive ;
+      coupon.duration = duration ;
+      coupon.value = value ;
 
       await this.couponRepo.save(coupon);
     } catch (error) {

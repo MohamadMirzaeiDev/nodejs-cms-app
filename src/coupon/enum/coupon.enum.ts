@@ -1,5 +1,4 @@
 export enum CouponStatus {
-    COMPLETED = 'COMPLETED',
-    ACTIVE =  'ACTIVE' ,
-    PENDING = 'PENDING'
+    VALID="VALID",
+    INVALID="INVALID"
 }

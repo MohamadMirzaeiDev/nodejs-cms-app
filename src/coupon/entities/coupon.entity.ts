@@ -10,18 +10,18 @@ export class Coupon {
     @Column({type : 'varchar' , nullable : false})
     name : string ; 
 
-    @Column({type : 'boolean' , nullable : false})
-    isActive : boolean ; 
+    @Column({type : 'varchar' , nullable : false})
+    value : string ; 
 
     @Column({type : 'varchar' , nullable : false})
-    description : string ; 
+    code : string ; 
 
-    @Column({type:'enum' , enum : CouponStatus , default : CouponStatus.PENDING})
+    @Column({type:'enum' , enum : CouponStatus , default : CouponStatus.VALID})
     status : CouponStatus ; 
 
-    @Column({type:'enum' , enum : CouponType , default : CouponType.FREE_DELIVERY})
+    @Column({type:'enum' , enum : CouponType , default : CouponType.PRICE_DISCOUNT})
     type : CouponType ; 
 
     @Column({type : 'date' , nullable : true})
-    expire_time : Date ;
+    duration : Date ;
 }

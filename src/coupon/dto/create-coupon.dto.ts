@@ -1,32 +1,29 @@
-import { IsBoolean, IsDate, IsEnum, IsNotEmpty, IsString, IsTimeZone } from "class-validator";
-import { CouponStatus } from "../enum/coupon.enum";
+import { IsEnum, IsNotEmpty, IsString } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 import { CouponType } from "../enum/type.enum";
+import { Transform } from "class-transformer";
 
 export class CreateCouponDto {
     @ApiProperty()
     @IsString()
     @IsNotEmpty()
     name : string ; 
-    
-    @ApiProperty()
-    @IsBoolean()
-    @IsNotEmpty()
-    isActive : boolean ; 
+
 
     @ApiProperty()
     @IsString()
     @IsNotEmpty()
-    description : string ; 
+    code : string ; 
+
 
     @ApiProperty()
-    @IsEnum(CouponStatus)
+    @IsString()
     @IsNotEmpty()
-    status : CouponStatus ; 
+    value : string ; 
 
     @ApiProperty()
     @IsNotEmpty()
-    expire_time : Date ;
+    duration : Date ;
 
     @ApiProperty()
     @IsEnum(CouponType)
