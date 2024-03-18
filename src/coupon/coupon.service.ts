@@ -6,6 +6,7 @@ import { Coupon } from './entities/coupon.entity';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { StatusResult } from 'src/shared/status-result/status-result';
 import { CouponStatus } from './enum/coupon.enum';
+import { randomIntGenerator } from 'src/shared/random-int-generator/random-int-generator';
 
 type Where = FindOptionsWhere<Coupon> ;
 
@@ -39,6 +40,7 @@ export class CouponService {
 
 
       const newCoupon = new Coupon()
+        newCoupon.usage = randomIntGenerator(3);
         newCoupon.name = name ;
         newCoupon.code = code;
         newCoupon.duration = duration;

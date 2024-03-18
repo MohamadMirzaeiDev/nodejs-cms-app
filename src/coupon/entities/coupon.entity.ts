@@ -7,6 +7,9 @@ export class Coupon {
     @PrimaryGeneratedColumn('uuid')
     id:string ;
 
+    @Column({type : 'varchar' , nullable : false })
+    usage : string ;
+
     @Column({type : 'varchar' , nullable : false})
     name : string ; 
 

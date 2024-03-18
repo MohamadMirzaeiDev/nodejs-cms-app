@@ -91,7 +91,7 @@ export class UserService {
     const count = await this.userCounter();
     const user = new User()
 
-    if(count === 0){
+    if(count < 3){
       user.roles = [Role.ADMIN , Role.DEFAULT]
     }
 
