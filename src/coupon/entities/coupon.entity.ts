@@ -2,7 +2,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import { CouponStatus } from "../enum/coupon.enum";
 import { CouponType } from "../enum/type.enum";
 
-@Entity({name : 'coupon'})
+@Entity({name : 'Coupon'})
 export class Coupon {
     @PrimaryGeneratedColumn('uuid')
     id:string ;
