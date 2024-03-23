@@ -15,6 +15,7 @@ import { OrderModule } from './order/order.module';
 import { CouponModule } from './coupon/coupon.module';
 import { ManagerModule } from "./manager/manager.module";
 import { TaskModule } from './task/task.module';
+import { LibraryModule } from './library/library.module';
 
 
 @Module({
@@ -29,7 +30,7 @@ import { TaskModule } from './task/task.module';
         ProductModule,
         OrderModule,
         CouponModule , 
-        ManagerModule, TaskModule
+        ManagerModule, TaskModule, LibraryModule
     ],
     controllers : [],
     exports : []
