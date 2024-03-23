@@ -48,8 +48,9 @@ export class CouponService {
         newCoupon.type = type ; 
 
       const currentDate = new Date();
+      const currentDuration = new Date(duration)
     
-      if(duration < currentDate){
+      if(currentDuration < currentDate){
         newCoupon.status = CouponStatus.INVALID 
       }else {
         newCoupon.status = CouponStatus.VALID 
@@ -93,9 +94,9 @@ export class CouponService {
     try {
       const coupon = await this.findOne({id});
       const currentDate = new Date();
+      const currentDuration = new Date(duration);
 
-
-      if(duration < currentDate){
+      if(currentDuration < currentDate){
         coupon.status = CouponStatus.INVALID
       }else{
         coupon.status = CouponStatus.VALID
