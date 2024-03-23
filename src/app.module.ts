@@ -14,6 +14,7 @@ import { CategoryModule } from './category/category.module';
 import { OrderModule } from './order/order.module';
 import { CouponModule } from './coupon/coupon.module';
 import { ManagerModule } from "./manager/manager.module";
+import { TaskModule } from './task/task.module';
 
 
 @Module({
@@ -28,7 +29,7 @@ import { ManagerModule } from "./manager/manager.module";
         ProductModule,
         OrderModule,
         CouponModule , 
-        ManagerModule
+        ManagerModule, TaskModule
     ],
     controllers : [],
     exports : []
