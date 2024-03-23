@@ -33,8 +33,7 @@ export class CreateUserDto {
 
     @ApiProperty()
     @IsNotEmpty()
-    @IsEnum(Role)
-    role : Role ; 
+    roles : Role[] ; 
     
 
 

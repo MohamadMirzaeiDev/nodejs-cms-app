@@ -114,7 +114,7 @@ export class UserService {
       first_name ,
       last_name , 
       password , 
-      role , 
+      roles , 
       username ,
       address , 
       city , 
@@ -144,7 +144,7 @@ export class UserService {
     user.last_name = last_name; 
     user.username =  username ; 
     user.password = password ;
-    user.roles = [role];
+    user.roles = roles ;
     user.city = city ;
     user.address = address ;
     user.country = country ; 
@@ -173,7 +173,7 @@ export class UserService {
     const {
       first_name , 
       last_name , 
-      role , 
+      roles  , 
       address , 
       city , 
       country , 
@@ -197,7 +197,7 @@ export class UserService {
                 .set({
                   first_name , 
                   last_name, 
-                  roles : [role],
+                  roles : roles,
                   address , 
                   city , 
                   country , 

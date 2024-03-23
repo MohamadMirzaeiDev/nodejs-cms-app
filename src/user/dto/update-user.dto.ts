@@ -16,8 +16,7 @@ export class UpdateUserDto {
 
     @ApiProperty()
     @IsNotEmpty()
-    @IsEnum(Role)
-    role : Role ; 
+    roles : Role[] ; 
     
 
     @ApiProperty()
