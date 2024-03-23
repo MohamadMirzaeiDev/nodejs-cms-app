@@ -104,7 +104,7 @@ export class UserService {
 
     const newUser = await this.userRepo.save(user);
 
-    return newUser
+    return newUser;
     
   }
 
@@ -114,7 +114,7 @@ export class UserService {
       first_name ,
       last_name , 
       password , 
-      roles , 
+      role , 
       username ,
       address , 
       city , 
@@ -144,7 +144,7 @@ export class UserService {
     user.last_name = last_name; 
     user.username =  username ; 
     user.password = password ;
-    user.roles = roles;
+    user.roles = [role];
     user.city = city ;
     user.address = address ;
     user.country = country ; 
@@ -173,14 +173,14 @@ export class UserService {
     const {
       first_name , 
       last_name , 
-      roles , 
+      role , 
       address , 
       city , 
       country , 
       note , 
-      postal_code , 
+      postal_code ,
+      home_phone_number ,
       phone_number , 
-      home_phone_number
     } = updateUserDto ; 
 
     const result:StatusResult = {
@@ -197,12 +197,12 @@ export class UserService {
                 .set({
                   first_name , 
                   last_name, 
-                  roles ,
+                  roles : [role],
                   address , 
                   city , 
                   country , 
                   note , 
-                  postal_code , 
+                  postal_code ,
                   phone_number , 
                   home_phone_number
                 })
