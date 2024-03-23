@@ -2,6 +2,8 @@ import { BeforeInsert, Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColu
 import { Role } from "../enum/role.enum";
 import * as bcrypt from 'bcrypt';
 import { Order } from "src/order/entities/order.entity";
+import { Task } from "src/task/entities/task.entity";
+import { Exclude, Expose } from "class-transformer";
 
 @Entity({name : "User"})
 export class User {
@@ -60,4 +62,7 @@ export class User {
 
     @OneToMany(()=>Order , (order)=>order.user)
     orders : Order[] ;
+
+    @OneToMany(()=>Task , (task)=>task.user)
+    tasks : Task[] ;
 }
