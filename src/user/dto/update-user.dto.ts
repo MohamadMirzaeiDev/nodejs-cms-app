@@ -15,7 +15,7 @@ export class UpdateUserDto {
 
 
     @ApiProperty()
-    @IsNotEmpty()da
+    @IsNotEmpty()
     roles : Role[] ; 
     
 
