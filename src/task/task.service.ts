@@ -6,6 +6,7 @@ import { StatusResult } from 'src/shared/status-result/status-result';
 import { Task } from './entities/task.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class TaskService {
@@ -58,6 +59,11 @@ export class TaskService {
     return await this.taskRepo.find({relations : {user : true}})
   }
 
+  async findAllUserTask(user:User):Promise<Task[]>{
+    return await this.taskRepo.find({where:{user : {id : user.id}} , relations : {user : true}});
+  }
+
+
   async findOne(id:string):Promise<Task>{
     const task = await this.taskRepo.findOne({where:{id} , relations : {user : true}});
 
@@ -66,6 +72,38 @@ export class TaskService {
     }
 
     return task
+  }
+
+
+  async findOneUserTask(user:User , id:string):Promise<Task>{
+    const task = await this.taskRepo.findOne({where:{id , user : {id : user.id}} , relations : {user : true}});
+
+    if(!task){
+      throw new NotFoundException('Task is not found')
+    }
+
+    return task
+  }
+
+  async updateStatus(dto:UpdateTaskDto , taskId:string , user:User):Promise<StatusResult>{
+    const { isComplated } = dto;
+
+    try {
+      const task = await this.findOneUserTask(user ,taskId);
+      task.isComplated = isComplated ;
+      task.updated_at = new Date() ;
+      await this.taskRepo.save(task);
+    } catch (error) {
+      return {
+        message : error.message , 
+        success : false , 
+      }
+    }
+
+    return {
+      message : 'Item edited successfully' , 
+      success : true , 
+    }
   }
 
   async remove(id:string ):Promise<StatusResult>{

@@ -10,8 +10,8 @@ export class Task {
     @Column({type : 'varchar' , nullable : false})
     title : string ;
 
-    @Column({type : 'enum' , enum : TaskStatus , default : TaskStatus.PENDING})
-    status : TaskStatus ;
+    @Column({type : 'boolean' , default : false })
+    isComplated : boolean ;
 
     @ManyToOne(()=>User , (user)=>user.tasks)
     user : User ; 
