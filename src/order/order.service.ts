@@ -102,12 +102,12 @@ export class OrderService {
 
 
   async getUserOrder(userId:string):Promise<Order[]>{
-    return await this.orderRepo.find({where : {user : {id : userId}}}) ;
+    return await this.orderRepo.find({where : {user : {id : userId}} ,relations : {product : true}}) ;
   }
 
 
   async getProductOrder(productId:string):Promise<Order[]>{
-    return await this.orderRepo.find({where : {product : {id : productId}}}) ;
+    return await this.orderRepo.find({where : {product : {id : productId}} ,relations : {product : true}}) ;
   }
 
   async remove(id: string):Promise<StatusResult>{
