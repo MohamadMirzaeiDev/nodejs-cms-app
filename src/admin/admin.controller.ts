@@ -7,6 +7,7 @@ import { RolesGuard } from "src/auth/guards/role.guard";
 import { Role } from "src/user/enum/role.enum";
 import { ChangePasswordDto } from "./dto/change-password.dto";
 import { UserService } from "src/user/user.service";
+import { User } from "src/user/entities/user.entity";
 
 
 @ApiBearerAuth('access-token')
@@ -27,7 +28,8 @@ export class AdminController {
     @Put('/password')
     @HasRole(Role.ADMIN)
     @UseGuards(JwtAuthGuard , RolesGuard)
-    async updatePassword(@Req() user:any , @Body() changePassswordDto:ChangePasswordDto){
+    async updatePassword(@Req() req:Request , @Body() changePassswordDto:ChangePasswordDto){
+        const user = req.user as User
         const result = await this.userService.changePassword(changePassswordDto , user.id);
 
         if(!result.success){
