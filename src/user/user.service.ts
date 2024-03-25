@@ -38,7 +38,6 @@ export class UserService {
     return await this.userRepo.findOne({where , relations  : { orders : true}});
   }
 
-
   async findByEmail(email:string):Promise<User>{
     const user = await this.findOne({email})
 
@@ -51,7 +50,7 @@ export class UserService {
   }
 
   async findById(id:string):Promise<User>{
-    const user = await this.userRepo.findOneBy({id})
+    const user = await this.userRepo.findOne({where : {id}})
 
     if(!user){
       throw new NotFoundException("user is not found")
@@ -158,7 +157,7 @@ export class UserService {
     return result
   }
 
-
+ 
   async updateOrderInfo(userId:string , order_count:number , purchase_amount:number){
     const user = await this.userRepo.findOne({where : {id:userId}})
 
@@ -190,14 +189,13 @@ export class UserService {
 
     try {
       await this.findById(id)
-
       await this.userRepo
                 .createQueryBuilder()
                 .update(User)
                 .set({
                   first_name , 
                   last_name, 
-                  roles : roles,
+                  roles ,
                   address , 
                   city , 
                   country , 
@@ -232,7 +230,6 @@ export class UserService {
   
     try {
       await this.findById(id);
-
       await this.userRepo
                 .createQueryBuilder()
                 .update(User)
