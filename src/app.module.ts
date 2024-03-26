@@ -16,6 +16,7 @@ import { CouponModule } from './coupon/coupon.module';
 import { ManagerModule } from "./manager/manager.module";
 import { TaskModule } from './task/task.module';
 import { LibraryModule } from './library/library.module';
+import { SettingModule } from './setting/setting.module';
 
 
 @Module({
@@ -30,7 +31,7 @@ import { LibraryModule } from './library/library.module';
         ProductModule,
         OrderModule,
         CouponModule , 
-        ManagerModule, TaskModule, LibraryModule
+        ManagerModule, TaskModule, LibraryModule, SettingModule
     ],
     controllers : [],
     exports : []
