@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Role } from "../enum/role.enum";
+import { IsEmail } from "class-validator";
 
 export class UpdateUserDto {
     @ApiProperty()
@@ -8,11 +9,15 @@ export class UpdateUserDto {
     @ApiProperty()
     last_name : string ; 
 
+    @ApiProperty()
+    username : string ;
+
+    @ApiProperty()
+    email : string ; 
 
     @ApiProperty()
     roles : Role[] ; 
     
-
     @ApiProperty()
     phone_number : string;
 
@@ -21,15 +26,12 @@ export class UpdateUserDto {
    
     @ApiProperty()
     address : string ;
-
   
     @ApiProperty()
     country : string ;
     
-    
     @ApiProperty()
     city : string ; 
-
     
     @ApiProperty()
     postal_code: string ;

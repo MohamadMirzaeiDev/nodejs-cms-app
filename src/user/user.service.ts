@@ -22,7 +22,10 @@ export class UserService {
   ){}
 
   async findAllAdmin():Promise<User[]>{
-    return await this.userRepo.find({where : {roles : ArrayContains([Role.ADMIN])}, relations : {orders: true}})
+    return await this.userRepo.find({
+      where : {roles : ArrayContains([Role.ADMIN])}, 
+      relations : {orders: true} , 
+    })
   }
 
   async findUserOrder(id:string){
@@ -180,6 +183,8 @@ export class UserService {
       postal_code ,
       home_phone_number ,
       phone_number , 
+      email , 
+      username , 
     } = updateUserDto ; 
 
     const result:StatusResult = {
@@ -202,7 +207,9 @@ export class UserService {
                   note , 
                   postal_code ,
                   phone_number , 
-                  home_phone_number
+                  home_phone_number , 
+                  email , 
+                  username
                 })
                 .where("id = :id",{id})
                 .execute()

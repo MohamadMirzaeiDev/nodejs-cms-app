@@ -12,7 +12,7 @@ export class SettingService {
   ){}
 
 
-  private async _seedSettign():Promise<Setting>{
+  private async _seedSetting():Promise<Setting>{
     const setting = await this.settignRepo.findOne({where : {default_id : 1}})
 
     if(!setting){
@@ -25,7 +25,7 @@ export class SettingService {
   }
 
   async findAll():Promise<Setting>{
-    return await this._seedSettign()
+    return await this._seedSetting()
   }
 
 
@@ -38,7 +38,7 @@ export class SettingService {
       taskNotDone ,
     } = updateSettingDto;
     
-    const setting = await this._seedSettign()
+    const setting = await this._seedSetting()
 
     setting.emptyProductList = emptyProductList ;
     setting.numberDispaly = numberDispaly ;

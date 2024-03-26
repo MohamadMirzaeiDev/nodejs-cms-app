@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { IsEmail, IsEmpty } from "class-validator";
 
 export class UpdateAdminDto {
     @ApiProperty()
@@ -16,18 +17,21 @@ export class UpdateAdminDto {
     @ApiProperty()
     address : string ;
 
-  
     @ApiProperty()
     country : string ;
     
-    
     @ApiProperty()
     city : string ; 
-
     
     @ApiProperty()
     postal_code: string ;
 
     @ApiProperty()
     note : string ; 
+
+    @ApiProperty()
+    username : string ;
+
+    @ApiProperty()
+    email : string ; 
 }
