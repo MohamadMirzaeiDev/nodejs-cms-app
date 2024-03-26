@@ -4,7 +4,6 @@ import * as bcrypt from 'bcrypt';
 import { Order } from "src/order/entities/order.entity";
 import { Task } from "src/task/entities/task.entity";
 
-
 @Entity({name : "User"})
 export class User {
     @PrimaryGeneratedColumn('uuid')

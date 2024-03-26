@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, UseGuards } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, UseGuards, UseInterceptors } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
 import { HasRole } from "src/auth/decorator/role.decorator";
@@ -8,6 +8,7 @@ import { RolesGuard } from "src/auth/guards/role.guard";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { ChangePasswordDto } from "./dto/change-password.dto";
+import { PasswordInterceptor } from "./password.interceptor";
 
 
 @ApiTags('User')
@@ -20,7 +21,8 @@ export class UserController {
 
     @Get('')
     @HasRole(Role.ADMIN)   
-    @UseGuards(JwtAuthGuard , RolesGuard) 
+    @UseGuards(JwtAuthGuard , RolesGuard)
+    @UseInterceptors(PasswordInterceptor)
     async findAll(){
         return await this.userService.findAll()
     }
@@ -28,6 +30,7 @@ export class UserController {
     @Get(':id')
     @HasRole(Role.ADMIN)   
     @UseGuards(JwtAuthGuard , RolesGuard)
+    @UseInterceptors(PasswordInterceptor)
     async findOne(@Param('id') id:string){
         const user = this.userService.findOne({id})
         
